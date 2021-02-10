@@ -20,10 +20,10 @@ class SendEmail(object):
  
         # 默认的发送邮件的邮箱地址和密码。
         # 当没有传递发送者的邮箱地址和密码时，使用默认的邮箱地址和密码发送
-        self._email_address = "xxxxxxxx@163.com"  # 用户名
-        self._email_password = "*******"          # 口令
- 
-        self.from = None
+        self._email_address = "xxxxxx@163.com"  # 用户名
+        self._email_password = "*******"        # 口令
+
+        self.frm = None
         self.pwd = None
         self.to = None
         self.email_title = None
@@ -32,10 +32,10 @@ class SendEmail(object):
         self.attach_path_list = None
 
  
-    def set_args(self, from=None, pwd=None, to=None, email_title=None, email_content=None, attach_path=None):
+    def set_args(self, frm=None, pwd=None, to=None, email_title=None, email_content=None, attach_path=None):
         """
             设置参数
-        :param from: 发送者邮箱地址
+        :param frm: 发送者邮箱地址
         :param pwd: 发送者邮箱口令
         :param to:  接收者邮箱地址，多个接收者时以逗号','分割
         :param email_title:  邮件标题
@@ -43,14 +43,14 @@ class SendEmail(object):
         :param attach_path:  附件路径，多个附件时以逗号','分割
         :return:
         """
-        if from:
-            self.from = from
+        if frm:
+            self.frm = frm
             if not pwd:
                 raise Exception('设置邮箱密码')
             else:
                 self.pwd = pwd
         else:
-            self.from = self._email_address
+            self.frm = self._email_address
             self.pwd = self._email_password
         self.to = to
         self.email_title = email_title
@@ -63,7 +63,7 @@ class SendEmail(object):
  
     def send_email(self):
         multi_part = MIMEMultipart()
-        multi_part['From'] = self.from
+        multi_part['From'] = self.frm
         multi_part['To'] = self.to
         multi_part['Subject'] = Header(self.email_title, "utf-8")
  
@@ -96,8 +96,8 @@ class SendEmail(object):
         # ssl 协议安全发送
         smtp_server = smtplib.SMTP_SSL(host=self._smtp_host, port=self._smtp_port)
         try:
-            smtp_server.login(self.from, self.pwd)
-            smtp_server.sendmail(self.from, self.to, multi_part.as_string())
+            smtp_server.login(self.frm, self.pwd)
+            smtp_server.sendmail(self.frm, self.to, multi_part.as_string())
         except smtplib.SMTPException as e:
             print("send fail", e)
         else:
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     )
     parse.add_option(
         '-p', '--pwd', dest='pwd', type=str, metavar='pwd',
-        help='发送者的邮箱密码'
+        help='发送者的邮箱口令'
     )
     parse.add_option(
         '-T', '--title', dest='email_title', type=str, metavar='title',
